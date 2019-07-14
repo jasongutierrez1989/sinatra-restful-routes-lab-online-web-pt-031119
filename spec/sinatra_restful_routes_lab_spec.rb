@@ -57,9 +57,7 @@ describe "Recipe App" do
       expect(page.body).to include(recipe_cook_time)
     end
 
-    it "contains a form to delete the recipe" do
-      expect(page.find(:css, "form")[:action]).to eq("/recipes/#{@recipe1.id}")
-    end
+
 
     it 'deletes via a DELETE request' do
       expect(page.find(:css, "form input[name=_method]", :visible => false)[:value]).to match(/delete/i)
@@ -167,5 +165,23 @@ describe "Recipe App" do
 
   end
 
+  describe "deleting a recipe" do
+
+    before do
+      @cookie = Recipe.create(
+        name:   "Chocolate Chip Cookies",
+        ingredients:  "chocolate chips, flour, sugar, butter",
+        cook_time:  "30 minutes",
+      )
+      visit  "/recipes/#{@cookie.id}"
+
+      click_button "delete"
+    end
+
+    it "deletes a recipe" do
+      expect(Recipe.find_by_id(@cookie.id)).to eq(nil)
+    end
+
+  end
 
 end
